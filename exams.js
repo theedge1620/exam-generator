@@ -1,4 +1,6 @@
 const pwrTopics = require('./static/data/pwr-ka-catalog.js');
+const bwrTopics = require('./static/data/bwr-ka-catalog.js');
+
 
 // return all Topics:
 const getTopics = (req, res) => {
@@ -25,10 +27,20 @@ const getRandomTopic = (req, res) => {
   res.send({randomTopic});
 };
 
-// return an exam:
+// return a PWR exam:
 const getExamTopics = (req, res) => {
   
   const examTopics = pwrTopics.getExam(req.params.design,req.params.iceCondFlag,req.params.multiUnitFLag);
+
+  console.log(req.params.design);
+
+  res.send({examTopics});
+};
+
+// return a PWR exam:
+const getBWRExam = (req, res) => {
+  
+  const examTopics = bwrTopics.getExam(req.params.design,req.params.isoCondFlag,req.params.multiUnitFLag);
 
   console.log(req.params.design);
 
@@ -41,7 +53,8 @@ module.exports = {
   getTopics,
   getTopic,
   getRandomTopic,
-  getExamTopics
+  getExamTopics,
+  getBWRExam
 };
 
 

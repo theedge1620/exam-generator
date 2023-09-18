@@ -39,9 +39,17 @@ button.addEventListener('click', async ()=> {
                 var containmentType = response.data.siteData.ContainmentType;
                 var multiUnitFlag = response.data.siteData.MultiUnit;
                 var hpci = response.data.siteData.hpciFlag;
-                var isoCondenser = response.data.siteData.isolationCondenser;
+                var designType = response.data.siteData.DesignType;
+                
+                if (siteName === "Dresden" || siteName === 'Nine Mile Point 1') {
+                    var isoCondenser = 1;
+                }
+                else {
+                    var isoCondenser = 0;
+                }
+                
                 var rhrFlag = response.data.siteData.rhrLPCI;
-                examQuery = 'http://localhost:3001/bwr/' + parseInt(containmentType) + '/isocondenser/'+parseInt(isiCondenser);
+                examQuery = 'http://localhost:3001/bwr/' + parseInt(designType) + '/isocondenser/'+parseInt(isoCondenser)+'/multi/'+parseInt(multiUnitFlag);
 
             }
             else { // store the correct PWR flags and call the PWR exam topic generator function
