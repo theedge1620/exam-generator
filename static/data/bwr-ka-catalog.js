@@ -59196,6 +59196,8 @@ module.exports = {
 				newSystem = systemsT2G2[systemsT2G2.length - fillSystemOffset];
 			};		
 
+			console.log([nullSystem,newSystem]);
+
 			// Get a new topic with the same KA
 			nullKA = kaCatsRO[isOneNull];
 			var subTopic = randomTopicSelector(newSystem,nullKA,"RO");
@@ -59233,6 +59235,7 @@ module.exports = {
 				newSystem = systemsT2G2[systemsT2G2.length - fillSystemOffset];
 			};		
 
+			console.log([nullSystem,newSystem]);
 			// Get a new topic with the same KA
 			nullKA = kaCatsSRO[isOneNull];
 			var subTopic = randomTopicSelector(newSystem,nullKA,"SRO");
