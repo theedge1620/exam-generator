@@ -81,7 +81,7 @@ button.addEventListener('click', async ()=> {
      .then(response => {
         
         // If the response is good, let's update the page with the results:
-        console.log(examQuery);
+        //console.log(examQuery);
 
         /// create a Table with the returned job results from the query:
 
@@ -100,6 +100,7 @@ button.addEventListener('click', async ()=> {
             topicImportance = response.data.examTopics.importance;
             topicCategory = response.data.examTopics.kaCats;
             topicSystems = response.data.examTopics.systems;
+            console.log(response);
 
             // Set up the array of headers for the table columns:
             var headers = ["Question Number", "Topic Title", "Topic Importance","Topic Category","Topic System"];
