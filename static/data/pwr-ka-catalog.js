@@ -75867,6 +75867,7 @@ module.exports = {
 		};
 
 		// On to Tier 3:
+		var t3ExcludeList = ["G2.1.27","G2.1.46","G2.2.42","G2.4.2","G2.4.4","G2.4.18","G2.4.50"];
 
 		for (let i = 0; i < 6; i++) {  //  for Tier 3 RO topics
 			if (i === 0 || i == 1) { // pick CO topics
@@ -75884,6 +75885,10 @@ module.exports = {
 			
 			thisKA = thisSystem;
 			var topicData = randomTopicSelector(thisSystem,thisKA,"RO");
+			// ensure the selected topic is not in the excluded list:
+			while (t3ExcludeList.includes(topicData.kaNum) ) {
+				topicData = randomTopicSelector(thisSystem,thisKA,"RO");
+			};
 			var titleToAdd = topicData.kaTitle;
 			
 			topicTitlesRO.push(titleToAdd);
@@ -75897,6 +75902,12 @@ module.exports = {
 			thisSystem = SROsystemsTier3[i];
 			thisKA = thisSystem;
 			var topicData = randomTopicSelector(thisSystem,thisKA,"SRO");
+			// ensure the selected topic is not in the excluded list:
+			while (t3ExcludeList.includes(topicData.kaNum) ) {
+				topicData = randomTopicSelector(thisSystem,thisKA,"SRO");
+			};
+
+
 			var titleToAdd = topicData.kaTitle;
 			
 			topicTitlesSRO.push(titleToAdd);
