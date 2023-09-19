@@ -59172,6 +59172,82 @@ module.exports = {
 		 };
 		 console.log(countUnique(kaCatsRO));
 
+		// Fill in any blank RO topics with the same ka-cats but iterate system:
+		const isNull = (element) => element == null;
+		var isOneNull = topicTitlesRO.findIndex(isNull);
+		var fillSystemOffset = 0;
+		while (isOneNull !== -1) {
+			fillSystemOffset = fillSystemOffset+1;  // length from the end of systems array we will look.
+			nullSystem = topicSystemsRO[isOneNull];  // store the system that failed
+			console.log(isOneNull);
+			// Find another system in the same list:
+			var newSystem = '';
+			const isCurrentSystem = (element) => element == nullSystem;
+			if (systemsT1G1.findIndex(isCurrentSystem) !== -1) {
+				newSystem = systemsT1G1[systemsT1G1.length - fillSystemOffset];
+			} 
+			else if (systemsT1G2.findIndex(isCurrentSystem) !== -1) {
+				newSystem = systemsT1G2[systemsT1G2.length - fillSystemOffset];
+			}
+			else if (systemsT2G1.findIndex(isCurrentSystem) !== -1) {
+				newSystem = systemsT2G1[systemsT2G1.length - fillSystemOffset];
+			}
+			else if (systemsT2G2.findIndex(isCurrentSystem) !== -1) {
+				newSystem = systemsT2G2[systemsT2G2.length - fillSystemOffset];
+			};		
+
+			// Get a new topic with the same KA
+			nullKA = kaCatsRO[isOneNull];
+			var subTopic = randomTopicSelector(newSystem,nullKA,"RO");
+
+			// update the topics tracked with the new selection:
+			topicTitlesRO[isOneNull] = subTopic.kaTitle;
+			topicSystemsRO[isOneNull] = newSystem;
+			topicImportanceRO[isOneNull] = subTopic.ROImp;
+
+			isOneNull = topicTitlesRO.findIndex(isNull);
+
+		};
+
+		// Fill in any blank SRO topics with the same ka-cats but iterate system:
+		
+		var isOneNull = topicTitlesSRO.findIndex(isNull);
+		//  var fillSystemOffset = 0;  Keep going from any RO Offset from the end of the array
+		while (isOneNull !== -1) {
+			fillSystemOffset = fillSystemOffset+1;  // length from the end of systems array we will look.
+			nullSystem = topicSystemsSRO[isOneNull];  // store the system that failed
+			console.log(isOneNull);
+			// Find another system in the same list:
+			var newSystem = '';
+			const isCurrentSystem = (element) => element == nullSystem;
+			if (systemsT1G1.findIndex(isCurrentSystem) !== -1) {
+				newSystem = systemsT1G1[systemsT1G1.length - fillSystemOffset];
+			} 
+			else if (systemsT1G2.findIndex(isCurrentSystem) !== -1) {
+				newSystem = systemsT1G2[systemsT1G2.length - fillSystemOffset];
+			}
+			else if (systemsT2G1.findIndex(isCurrentSystem) !== -1) {
+				newSystem = systemsT2G1[systemsT2G1.length - fillSystemOffset];
+			}
+			else if (systemsT2G2.findIndex(isCurrentSystem) !== -1) {
+				newSystem = systemsT2G2[systemsT2G2.length - fillSystemOffset];
+			};		
+
+			// Get a new topic with the same KA
+			nullKA = kaCatsSRO[isOneNull];
+			var subTopic = randomTopicSelector(newSystem,nullKA,"SRO");
+
+			// update the topics tracked with the new selection:
+			topicTitlesSRO[isOneNull] = subTopic.kaTitle;
+			topicSystemsSRO[isOneNull] = newSystem;
+			topicImportanceSRO[isOneNull] = subTopic.ROImp;
+
+			isOneNull = topicTitlesSRO.findIndex(isNull);
+
+		}
+
+
+
 		// Return the topic information in JSON format:
 
 		var allTopicTitles = topicTitlesRO.concat(topicTitlesSRO);
