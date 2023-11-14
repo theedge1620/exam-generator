@@ -75449,18 +75449,20 @@ module.exports = {
 		kaCatsTier1 = shuffleArray(kaCatsTier1);
 		kaCatsTier1 = repeat(kaCatsTier1,10);
 		var SROCatsTier1and2 = ["A2","G"];
+		// CODE UPDATE NOTE:  we should add a check to ensure that A2 and G SRO topics are not repeated from the RO Topics using system / KA
+		// This can be accomplished by checking previous topics, and then switching to the next item in the A2 / G list if you hit a matched system/ka from RO
 		SROCatsTier1and2 = shuffleArray(SROCatsTier1and2);
 		SROCatsTier1and2 = repeat(SROCatsTier1and2,20);
 
 		var kaCatsTier2 = ["K1", "K2","K3","K4","K5","K6","A1","A2","A3","A4","G"];
 		kaCatsTier2 = shuffleArray(kaCatsTier2);
-		var tier2GCswitch = 'C';
+		var tier2GCswitch = 'G';  // when selecting Tier 2, we alternate selection of Gs and Cs to ensure random sampling of each
 		kaCatsTier2 = repeat(kaCatsTier2,5);
 
-		var kaCatsTier3 = ["CO","EC","RC","EM"];
-		var systemsTier3 = ["G2.1","G2.2","G2.3","G2.4"];
+		// var kaCatsTier3 = ["CO","EC","RC","EM"];  //  These are the categories in the table but are not in the KA strings, so we use G2.x for systems in Tier 3.		var systemsTier3 = ["G2.1","G2.2","G2.3","G2.4"];
 		var kaCatsTier3TopicNums = [2,2,1,1];
-		var SROsystemsTier3 = ["G2.1","G2.2","G2.3","G2.4"]
+		var SROsystemsTier3 = ["G2.1","G2.2","G2.3","G2.4"];
+		var systemsTier3 = ["G2.1","G2.2","G2.3","G2.4"];
 		SROsystemsTier3 = shuffleArray(SROsystemsTier3);
 		SROsystemsTier3 = repeat(SROsystemsTier3,3);
 
@@ -75472,6 +75474,11 @@ module.exports = {
 		var systemsComponents = ['19100'];
 		var systemsGenerics = ['G2.']
 		var systemsTier4 = ['19200','1930'];
+		var systemsTier4R = ['192001','192002','192003','192004','192005','192006','192007','192008'];
+		var systemsTier4T = ['193001','193003','193004','193005','293006','293007','293008','293009','293010'];
+		systemsTier4R = shuffleArray(systemsTier4R);
+		systemsTier4T = shuffleArray(systemsTier4T);
+		
 
 		// set up the multi-unit flag exlcusions:
 		multiUnitExclusions = ['K4.09','G2.2.3','G2.2.4'];
@@ -75919,12 +75926,12 @@ module.exports = {
 		// On to Tier 4 (RO-only):
 
 		for (let i = 0; i < 6; i++) {  //  for Tier 3 RO topics
-			if (i <= 2) { // pick RT topics
-				thisSystem = systemsTier4[0];
+			if (i <= 2) { // pick 3 distinct RT topics
+				thisSystem = systemsTier4R[i];
 				thisKA = 'R';
 			}
-			else { // pick TH topics
-				thisSystem = systemsTier4[1];
+			else { // pick 3 distinct TH topics
+				thisSystem = systemsTier4T[i];
 				thisKA = 'T';
 			};
 
@@ -75950,6 +75957,8 @@ module.exports = {
 		 console.log(countUnique(kaCatsRO));
 
 		 // Fill in any blank RO topics with the same ka-cats but iterate system:
+		// LOGIC UPDATE NOTE:  need to switch this to keep system and iterate on KA instead of system.
+
 		const isNull = (element) => element == null;
 		var isOneNull = topicTitlesRO.findIndex(isNull);
 		var fillSystemOffset = 0;
@@ -75987,6 +75996,7 @@ module.exports = {
 		}
 
 		// Fill in any blank SRO topics with the same ka-cats but iterate system:
+		// LOGIC UPDATE NOTE:  need to switch this to keep system and iterate on KA instead of system.
 		
 		var isOneNull = topicTitlesSRO.findIndex(isNull);
 		//  var fillSystemOffset = 0;  Keep going from any RO Offset from the end of the array

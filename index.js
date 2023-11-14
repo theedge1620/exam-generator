@@ -49,7 +49,7 @@ button.addEventListener('click', async ()=> {
                 }
                 
                 var rhrFlag = response.data.siteData.rhrLPCI;
-                examQuery = 'http://localhost:3001/bwr/' + parseInt(designType) + '/isocondenser/'+parseInt(isoCondenser)+'/multi/'+parseInt(multiUnitFlag);
+                examQuery = 'http://localhost:3001/bwr/' + parseInt(designType) + '/isocondenser/'+parseInt(isoCondenser)+'/multi/'+parseInt(multiUnitFlag)+'/containment/'+containmentType;
 
             }
             else { // store the correct PWR flags and call the PWR exam topic generator function
@@ -81,7 +81,7 @@ button.addEventListener('click', async ()=> {
      .then(response => {
         
         // If the response is good, let's update the page with the results:
-        //console.log(examQuery);
+        console.log(examQuery);
 
         /// create a Table with the returned job results from the query:
 

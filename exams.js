@@ -40,7 +40,7 @@ const getExamTopics = (req, res) => {
 // return a PWR exam:
 const getBWRExam = (req, res) => {
   
-  const examTopics = bwrTopics.getExam(req.params.design,req.params.isoCondFlag,req.params.multiUnitFLag);
+  const examTopics = bwrTopics.getExam(req.params.design,req.params.isoCondFlag,req.params.multiUnitFLag,req.params.containment);
 
   console.log(req.params.design);
 

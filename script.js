@@ -33,8 +33,8 @@ app.get('/topics/:system/kas/:kaNum/roles/:role', examController.getRandomTopic)
 
 app.get('/pwr/:design/icecondflag/:iceCondFlag/multi/:multiUnitFLag', examController.getExamTopics);
 
-app.get('/bwr/:design/isocondenser/:isoCondFlag/multi/:multiUnitFLag', examController.getBWRExam);
-
+//app.get('/bwr/:design/isocondenser/:isoCondFlag/multi/:multiUnitFLag', examController.getBWRExam);
+app.get('/bwr/:design/isocondenser/:isoCondFlag/multi/:multiUnitFLag/containment/:containment', examController.getBWRExam);
 
 
 
