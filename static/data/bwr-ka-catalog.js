@@ -58661,7 +58661,7 @@ module.exports = {
 
 		// define function to select a random topic:
 
-		function randomTopicSelector(systemNumber,kaCat,roleType,idExclusions) {
+		function randomTopicSelector(systemNumber,kaCat,roleType,idExclusions,designType,contType) {
 
 			// Filter the JSON data based on the criteria
 			
@@ -58693,17 +58693,43 @@ module.exports = {
 			// Return the randomly selected entry
 			const randomEntry = filteredEntries[randomIndex];
 
-			// CODE UPDATE NOTE:  Working on adding checks for design type and containment type here, must pass into
-			// function call above before proceeding.
-			//kaTitleString = randomEntry.kaTitle;
-			//if (kaTitleString.includes('(BWR ')) {
-			//	let index = kaTitleString.indexOf('(BWR ');
-			//	let substring = kaTitleString.substring(index,kaTitleString.length());
-			//	if(substring.includes())
-			//}
+			// Code to check for Design and Containment Type Applicability:
+			kaTitleString = randomEntry.kaTitle;
+			if (!kaTitleString.includes('(BWR ') && !kaTitleString.includes('(Mark ')) {
+				return randomEntry;
+			}
+			else if (kaTitleString.includes('(BWR ')) {
+				let index = kaTitleString.indexOf('(BWR ');
+				let testString = kaTitleString.substring(index,kaTitleString.length);
+				let index2 = testString.indexOf(')');
+				testString = testString.substring(0,index2);
+				console.log(testString);
 
+				if(testString.includes(designType)) {
+					return randomEntry;
+				}
+				else { // Pick another random entry
+					const randomIndex = Math.floor(Math.random() * filteredEntries.length);
+					const randomEntry = filteredEntries[randomIndex];
+					return randomEntry;					
+				}
+			}
+			else if (kaTitleString.includes('(Mark ')) {
+				let index = kaTitleString.indexOf('(Mark ');
+				let testString = kaTitleString.substring(index,kaTitleString.length);
+				let index2 = testString.indexOf(')');
+				testString = testString.substring(0,index2);
+				console.log(testString);
 
-			return randomEntry;
+				if(testString.includes(contType)) {
+					return randomEntry;
+				}
+				else { // Pick another random entry
+					const randomIndex = Math.floor(Math.random() * filteredEntries.length);
+					const randomEntry = filteredEntries[randomIndex];
+					return randomEntry;					
+				}
+			}
 			
 		};
 
@@ -58857,20 +58883,20 @@ module.exports = {
 				// multi-unit flag exlcusions:
 
 				if (multiFlag===0) {
-					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds);
+					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,bwrDesignType,markType);
 					while (topicData.kaNum !== multiUnitExclusions[1] || topicData.kaNum !== multiUnitExclusions[2]) {
-						topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds);
+						topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,bwrDesignType,markType);
 					}
 
 				}
 				else {
-					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds);
+					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,bwrDesignType,markType);
 				}
 
 				var titleToAdd = "(" +thisSystem+") " + getSystemName(thisSystem) + ' ' + topicData.kaTitle;   // may need to add in the system title by performing another call
 			} 
 			else {
-				var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds);
+				var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds,bwrDesignType,markType);
 				var titleToAdd = topicData.kaTitle;
 			}
 			topicTitlesRO.push(titleToAdd);
@@ -58889,19 +58915,19 @@ module.exports = {
 				// multi-unit flag exlcusions:
 
 				if (multiFlag===0) {
-					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds);
+					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds,bwrDesignType,markType);
 					while (topicData.kaNum !== multiUnitExclusions[1] || topicData.kaNum !== multiUnitExclusions[2]) {
-						topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds);
+						topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds,bwrDesignType,markType);
 					}
 				}
 				else {
-					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds);
+					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds,bwrDesignType,markType);
 
 				}
 				var titleToAdd = "(" +thisSystem+") " + getSystemName(thisSystem) + ' ' + topicData.kaTitle;
 			} 
 			else {
-				var topicData = randomTopicSelector(thisSystem,thisKA,"SRO",selectedIds);
+				var topicData = randomTopicSelector(thisSystem,thisKA,"SRO",selectedIds,bwrDesignType,markType);
 				var titleToAdd = topicData.kaTitle;
 			}
 			topicTitlesSRO.push(titleToAdd);
@@ -58919,14 +58945,14 @@ module.exports = {
 				// multi-unit flag exlcusions:
 
 				if (multiFlag===0) {
-					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds);
+					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,bwrDesignType,markType);
 					while (topicData.kaNum !== multiUnitExclusions[1] || topicData.kaNum !== multiUnitExclusions[2]) {
-						topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds);
+						topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,bwrDesignType,markType);
 					}
 
 				}
 				else {
-					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds);
+					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,bwrDesignType,markType);
 
 				}
 
@@ -58934,7 +58960,7 @@ module.exports = {
 				
 			} 
 			else {
-				var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds);
+				var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds,bwrDesignType,markType);
 				var titleToAdd = topicData.kaTitle;
 			}
 			topicTitlesRO.push(titleToAdd);
@@ -58953,19 +58979,19 @@ module.exports = {
 				// multi-unit flag exlcusions:
 
 				if (multiFlag===0) {
-					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds);
+					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds,bwrDesignType,markType);
 					while (topicData.kaNum !== multiUnitExclusions[1] || topicData.kaNum !== multiUnitExclusions[2]) {
-						topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds);
+						topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds,bwrDesignType,markType);
 					}
 				}
 				else {
-					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds);
+					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds,bwrDesignType,markType);
 
 				}
 				var titleToAdd = "(" +thisSystem+") " + getSystemName(thisSystem) + ' ' + topicData.kaTitle;
 			} 
 			else {
-				var topicData = randomTopicSelector(thisSystem,thisKA,"SRO",selectedIds);
+				var topicData = randomTopicSelector(thisSystem,thisKA,"SRO",selectedIds,bwrDesignType,markType);
 				var titleToAdd = topicData.kaTitle;
 			}
 			topicTitlesSRO.push(titleToAdd);
@@ -58985,7 +59011,7 @@ module.exports = {
 			thisKA = kaCatsTier2[i];
 			if (thisKA === "G") { // needs to switch from G to C and start on G:
 				if (tier2GCswitch === 'C') {
-					var topicData = randomTopicSelector(systemsComponents,tier2GCswitch,"RO",selectedIds);
+					var topicData = randomTopicSelector(systemsComponents,tier2GCswitch,"RO",selectedIds,bwrDesignType,markType);
 					var titleToAdd = "(" +thisSystem+") " + getSystemName(thisSystem) + ' ' + topicData.kaTitle;
 					kaCatsRO.push('C');
 					tier2GCswitch = 'G';
@@ -58994,14 +59020,14 @@ module.exports = {
 					// multi-unit flag exlcusions:
 
 					if (multiFlag===0) {
-						var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds);
+						var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,bwrDesignType,markType);
 						while (topicData.kaNum !== multiUnitExclusions[1] || topicData.kaNum !== multiUnitExclusions[2]) {
-							topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds);
+							topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,bwrDesignType,markType);
 						}
 
 					}
 					else {
-						var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds);
+						var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,bwrDesignType,markType);
 
 					}
 
@@ -59012,7 +59038,7 @@ module.exports = {
 				
 			} 
 			else {
-				var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds);
+				var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds,bwrDesignType,markType);
 				var titleToAdd = topicData.kaTitle;
 				kaCatsRO.push(thisKA);
 			}
@@ -59031,20 +59057,20 @@ module.exports = {
 				// multi-unit flag exlcusions:
 
 				if (multiFlag===0) {
-					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds);
+					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds,bwrDesignType,markType);
 					while (topicData.kaNum !== multiUnitExclusions[1] || topicData.kaNum !== multiUnitExclusions[2]) {
-						topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds);
+						topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds,bwrDesignType,markType);
 					}
 				}
 				else {
-					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds);
+					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds,bwrDesignType,markType);
 
 				}
 				var titleToAdd = "(" +thisSystem+") " + getSystemName(thisSystem) + ' ' + topicData.kaTitle;
 				
 			} 
 			else {
-				var topicData = randomTopicSelector(thisSystem,thisKA,"SRO",selectedIds);
+				var topicData = randomTopicSelector(thisSystem,thisKA,"SRO",selectedIds,bwrDesignType,markType);
 				var titleToAdd = topicData.kaTitle;
 			}
 			topicTitlesSRO.push(titleToAdd);
@@ -59060,7 +59086,7 @@ module.exports = {
 			thisKA = kaCatsTier2[i+bwrNumTopics[4]+bwrNumTopics[5]];
 			if (thisKA === "G") { // needs to switch from G to C and start on C:
 				if (tier2GCswitch === 'C') {
-					var topicData = randomTopicSelector(systemsComponents,tier2GCswitch,"RO",selectedIds);
+					var topicData = randomTopicSelector(systemsComponents,tier2GCswitch,"RO",selectedIds,bwrDesignType,markType);
 					var titleToAdd = "(" +thisSystem+") " + getSystemName(thisSystem) + ' ' + topicData.kaTitle;
 					kaCatsRO.push('C');
 					tier2GCswitch = 'G';
@@ -59070,14 +59096,14 @@ module.exports = {
 					// multi-unit flag exlcusions:
 
 					if (multiFlag===0) {
-						var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds);
+						var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,bwrDesignType,markType);
 						while (topicData.kaNum !== multiUnitExclusions[1] || topicData.kaNum !== multiUnitExclusions[2]) {
-							topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds);
+							topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,bwrDesignType,markType);
 						}
 
 					}
 					else {
-						var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds);
+						var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,bwrDesignType,markType);
 
 					}
 
@@ -59094,17 +59120,17 @@ module.exports = {
 				// CODE UPATE NOTE:  NEED TO ENSURE THIS FUNCTION IS EXCLUDING 
 				if (multiFlag===0 && thisSystem === '295022') {
 					systemExclusion = multiUnitExclusions[0];
-					var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds);
+					var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds,bwrDesignType,markType);
 
 					// Get another one if it matches a multi-unit flag:
 					while (topicData.kaNum != systemExclusion) {
-						topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds);
+						topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds,bwrDesignType,markType);
 					}
 					var titleToAdd = topicData.kaTitle;
 
 				}
 				else {
-					var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds);
+					var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds,bwrDesignType,markType);
 					var titleToAdd = topicData.kaTitle;
 					kaCatsRO.push(thisKA);
 
@@ -59136,13 +59162,13 @@ module.exports = {
 				// multi-unit flag exlcusions:
 
 				if (multiFlag===0) {
-					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds);
+					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds,bwrDesignType,markType);
 					while (topicData.kaNum !== multiUnitExclusions[1] || topicData.kaNum !== multiUnitExclusions[2]) {
-						topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds);
+						topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds,bwrDesignType,markType);
 					}
 				}
 				else {
-					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds);
+					var topicData = randomTopicSelector("G2.",thisKA,"SRO",selectedIds,bwrDesignType,markType);
 
 				}
 				var titleToAdd = "(" +thisSystem+") " + getSystemName(thisSystem) + ' ' + topicData.kaTitle;
@@ -59153,17 +59179,17 @@ module.exports = {
 				// CODE UPDATE NOTE:  ensure this is only excluding AK2.06
 				if (multiFlag===0 && thisSystem === '295022') {
 					systemExclusion = multiUnitExclusions[0];
-					var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds);
+					var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds,bwrDesignType,markType);
 
 					// Get another one if it matches a multi-unit flag:
 					while (topicData.kaNum != systemExclusion) {
-						topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds);
+						topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds,bwrDesignType,markType);
 					}
 					var titleToAdd = topicData.kaTitle;
 
 				}
 				else {
-					var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds);
+					var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds,bwrDesignType,markType);
 					var titleToAdd = topicData.kaTitle;
 
 				}
@@ -59194,11 +59220,11 @@ module.exports = {
 			};
 			
 			thisKA = thisSystem;
-			var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds);
+			var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds,bwrDesignType,markType);
 
 			// ensure the selected topic is not in the excluded list:
 			while (t3ExcludeList.includes(topicData.kaNum) ) {
-				topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds);
+				topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds,bwrDesignType,markType);
 			};
 
 			var titleToAdd = topicData.kaTitle;
@@ -59227,11 +59253,11 @@ module.exports = {
 			};
 			
 			thisKA = thisSystem;
-			var topicData = randomTopicSelector(thisSystem,thisKA,"SRO",selectedIds);
+			var topicData = randomTopicSelector(thisSystem,thisKA,"SRO",selectedIds,bwrDesignType,markType);
 
 			// ensure the selected topic is not in the excluded list:
 			while (t3ExcludeList.includes(topicData.kaNum) ) {
-				topicData = randomTopicSelector(thisSystem,thisKA,"SRO",selectedIds);
+				topicData = randomTopicSelector(thisSystem,thisKA,"SRO",selectedIds,bwrDesignType,markType);
 			};
 
 
@@ -59257,7 +59283,7 @@ module.exports = {
 			};
 
 			
-			var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds);
+			var topicData = randomTopicSelector(thisSystem,thisKA,"RO",selectedIds,bwrDesignType,markType);
 			var titleToAdd = topicData.kaTitle;
 			
 			topicTitlesRO.push(titleToAdd);
@@ -59310,7 +59336,7 @@ module.exports = {
 
 			// Get a new topic with the same KA
 			nullKA = kaCatsRO[isOneNull];
-			var subTopic = randomTopicSelector(newSystem,nullKA,"RO",selectedIds);
+			var subTopic = randomTopicSelector(newSystem,nullKA,"RO",selectedIds,bwrDesignType,markType);
 
 			// update the topics tracked with the new selection:
 			topicTitlesRO[isOneNull] = subTopic.kaTitle;
@@ -59352,7 +59378,7 @@ module.exports = {
 			console.log([nullSystem,newSystem]);
 			// Get a new topic with the same KA
 			nullKA = kaCatsSRO[isOneNull];
-			var subTopic = randomTopicSelector(newSystem,nullKA,"SRO",selectedIds);
+			var subTopic = randomTopicSelector(newSystem,nullKA,"SRO",selectedIds,bwrDesignType,markType);
 
 			// update the topics tracked with the new selection:
 			topicTitlesSRO[isOneNull] = subTopic.kaTitle;
