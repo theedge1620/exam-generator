@@ -75556,8 +75556,6 @@ module.exports = {
 		systemsT2G1 = repeat(systemsT2G1,5);
 		systemsT2G2 = repeat(systemsT2G2,5);
 
-
-
 		var topicTitlesRO = [];
 		var topicImportanceRO = [];
 		var kaCatsRO = [];
@@ -75708,6 +75706,7 @@ module.exports = {
 				if (tier2GCswitch === 'C') {
 					var topicData = randomTopicSelector(systemsComponents,tier2GCswitch,"RO");
 					var titleToAdd = "(" +thisSystem+") "+ topicData.kaTitle;
+					kaCatsRO.push('C');
 					tier2GCswitch = 'G';
 				}
 				else {
@@ -75726,6 +75725,7 @@ module.exports = {
 					}
 
 					var titleToAdd = "(" +thisSystem+") "+ topicData.kaTitle;
+					kaCatsRO.push("G");
 					tier2GCswitch = 'C';
 				}
 				
@@ -75733,10 +75733,11 @@ module.exports = {
 			else {
 				var topicData = randomTopicSelector(thisSystem,thisKA,"RO");
 				var titleToAdd = topicData.kaTitle;
+				kaCatsRO.push(thisKA);
 			}
 			topicTitlesRO.push(titleToAdd);
 			topicImportanceRO.push(topicData.ROImp);
-			kaCatsRO.push(thisKA);
+			
 			topicSystemsRO.push(thisSystem);
 		};
 
@@ -75778,6 +75779,8 @@ module.exports = {
 				if (tier2GCswitch === 'C') {
 					var topicData = randomTopicSelector(systemsComponents,tier2GCswitch,"RO");
 					var titleToAdd = "(" +thisSystem+") "+ topicData.kaTitle;
+					kaCatsRO.push('C');
+
 					tier2GCswitch = 'G';
 				}
 				else {
@@ -75797,6 +75800,7 @@ module.exports = {
 					}
 
 					var titleToAdd = "(" +thisSystem+") "+ topicData.kaTitle;
+					kaCatsRO.push('G');
 					tier2GCswitch = 'C';
 				}
 				
@@ -75818,20 +75822,31 @@ module.exports = {
 				else {
 					var topicData = randomTopicSelector(thisSystem,thisKA,"RO");
 					var titleToAdd = topicData.kaTitle;
+					kaCatsRO.push(thisKA);
+
 
 				}
 				
 			}
 			topicTitlesRO.push(titleToAdd);
 			topicImportanceRO.push(topicData.ROImp);
-			kaCatsRO.push(thisKA);
 			topicSystemsRO.push(thisSystem);
 		};
 
 		// Perform Tier 2 Group 2 selections for SRO:
 		for (let i = pwrNumTopics[6]; i < pwrNumTopics[6]+pwrNumTopics[7]; i++) {  //  for Tier 2 Group 2 SRO topics
 			thisSystem = systemsT2G2[i];
-			thisKA = SROCatsTier1and2[i];
+
+			if (thisSystem === '400034') {  // If fuel handling is selected, select a random kaCat from all 11 options
+				var fhKACats = ['K1','K2','K3','K4','K5','K6','A1','A2','A3','A4','G'];
+				fhKACats = shuffleArray(fhKACats);
+				thisKA = fhKACats[0];
+			} 
+			else {
+				thisKA = SROCatsTier1and2[i];
+			}
+
+
 			if (thisKA === "G") { 
 				// multi-unit flag exlcusions:
 
@@ -75906,7 +75921,18 @@ module.exports = {
 
 		// Select Tier 3 SRO topics:
 		for (let i = 0; i < 7; i++) {  //  for Tier 3 SRO topics
-			thisSystem = SROsystemsTier3[i];
+			if (i === 0 || i == 1) { // pick 2 CO topics
+				thisSystem = systemsTier3[0];
+			}
+			else if (i == 2 || i == 3) { // pick 2 EC topics
+				thisSystem = systemsTier3[1];
+			}
+			else if (i == 4) { // pick 1 RC topic
+				thisSystem = systemsTier3[2];
+			}
+			else { // pick 2 EM topics
+				thisSystem = systemsTier3[3];
+			};
 			thisKA = thisSystem;
 			var topicData = randomTopicSelector(thisSystem,thisKA,"SRO");
 			// ensure the selected topic is not in the excluded list:
