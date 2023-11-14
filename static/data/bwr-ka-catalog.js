@@ -58692,6 +58692,17 @@ module.exports = {
 		
 			// Return the randomly selected entry
 			const randomEntry = filteredEntries[randomIndex];
+
+			// CODE UPDATE NOTE:  Working on adding checks for design type and containment type here, must pass into
+			// function call above before proceeding.
+			//kaTitleString = randomEntry.kaTitle;
+			//if (kaTitleString.includes('(BWR ')) {
+			//	let index = kaTitleString.indexOf('(BWR ');
+			//	let substring = kaTitleString.substring(index,kaTitleString.length());
+			//	if(substring.includes())
+			//}
+
+
 			return randomEntry;
 			
 		};
@@ -59110,7 +59121,17 @@ module.exports = {
 		// Perform Tier 2 Group 2 selections for SRO:
 		for (let i = bwrNumTopics[6]; i < bwrNumTopics[6]+bwrNumTopics[7]; i++) {  //  for Tier 2 Group 2 SRO topics
 			thisSystem = systemsT2G2[i];
-			thisKA = SROCatsTier1and2[i];
+
+			if (thisSystem === '234000') {  // If fuel handling is selected, select a random kaCat from all 11 options
+				var fhKACats = ['K1','K2','K3','K4','K5','K6','A1','A2','A3','A4','G'];
+				fhKACats = shuffleArray(fhKACats);
+				thisKA = fhKACats[0];
+			} 
+			else {
+				thisKA = SROCatsTier1and2[i];
+			}
+			
+			
 			if (thisKA === "G") { 
 				// multi-unit flag exlcusions:
 
