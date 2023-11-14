@@ -58747,7 +58747,7 @@ module.exports = {
 		SROCatsTier1and2 = shuffleArray(SROCatsTier1and2);
 		SROCatsTier1and2 = repeat(SROCatsTier1and2,20);
 
-		var kaCatsTier2 = ["K1", "K2","K3","K4","K5","K6","A1","A2","A3","A4","G"];
+		var kaCatsTier2 = ["K1","K2","K3","K4","K5","K6","A1","A2","A3","A4","G"];
 		kaCatsTier2 = shuffleArray(kaCatsTier2);
 		var tier2GCswitch = 'G';  // when selecting Tier 2, we alternate selection of Gs and Cs to ensure random sampling of each
 		kaCatsTier2 = repeat(kaCatsTier2,5);
