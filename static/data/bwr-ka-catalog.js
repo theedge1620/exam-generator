@@ -58657,7 +58657,7 @@ module.exports = {
 			const randomEntry = filteredEntries[randomIndex];
 			return randomEntry.system_name;
 
-		}
+		};
 
 		// define function to select a random topic:
 
@@ -58736,14 +58736,63 @@ module.exports = {
 		// set up repeater function:
 		const repeat = (arr, n) => [].concat(...Array(n).fill(arr));
 
+		// function to randomly return a different applicable KA category in a Tier, Group, Role within the same tier group system
+
+		function randomOtherCategory(tierNumber,roleROSRO,selectedKA) {
+
+			switch(tierNumber) { // switch statement on Tier
+				case 1:
+				  // code to return a different KA category than the one selected for Tier 1
+				  if (roleROSRO === "RO") {
+					var kaOptions = ["K1", "K2","K3","A1","A2","G"];
+					kaOptions = shuffleArray(kaOptions);
+			
+					shuffleIndex = 0;
+					var newKACat = kaOptions[shuffleIndex];
+					while(newKACat.includes(selectedKA)) {
+						shuffleIndex = shuffleIndex+1;
+						newKACat = kaOptions(shuffleIndex);
+					}
+					return newKACat;
+				  }
+				  else { // If it is SRO, return the opposite category.
+					if (selectedKA === 'G') {return 'A2'} else {return 'G'};
+
+				  }
+				  break;
+				case 2:
+				  // code to return a different KA category than the one selected for Tier 2
+				  if (roleROSRO === "RO") {
+					var kaOptions = ["K1","K2","K3","K4","K5","K6","A1","A2","A3","A4","G"];
+					kaOptions = shuffleArray(kaOptions);
+			
+					shuffleIndex = 0;
+					var newKACat = kaOptions[shuffleIndex];
+					while(newKACat.includes(selectedKA)) {
+						shuffleIndex = shuffleIndex+1;
+						newKACat = kaOptions(shuffleIndex);
+					}
+					return newKACat;
+				  }
+				  else { // If it is SRO, return the opposite category.
+					if (selectedKA === 'G') {return 'A2'} else {return 'G'};
+
+				  }
+				  break;
+				default:
+				  return selectedKA;
+			};
+			
+
+		};
+
+
 
 		// set up selector basiscs:
 		var kaCatsTier1 = ["K1", "K2","K3","A1","A2","G"];
 		kaCatsTier1 = shuffleArray(kaCatsTier1);
 		kaCatsTier1 = repeat(kaCatsTier1,10);
 		var SROCatsTier1and2 = ["A2","G"];
-		// CODE UPDATE NOTE:  we should add a check to ensure that A2 and G SRO topics are not repeated from the RO Topics using system / KA
-		// This can be accomplished by checking previous topics, and then switching to the next item in the A2 / G list if you hit a matched system/ka from RO
 		SROCatsTier1and2 = shuffleArray(SROCatsTier1and2);
 		SROCatsTier1and2 = repeat(SROCatsTier1and2,20);
 
@@ -58852,6 +58901,7 @@ module.exports = {
 		systemsT2G2 = repeat(systemsT2G2,5);
 
 		var selectedIds = [];
+		var selectedKACombos = [];
 
 		var topicTitlesRO = [];
 		var topicImportanceRO = [];
@@ -58867,18 +58917,18 @@ module.exports = {
 		const bwrNumTopics = [20,7,6,3,26,5,11,3,6,7,6];
 		const topicGroups = ["T1G1","T1G1","T1G2","T1G2","T2G1","T2G1","T2G2","T2G2","T3","T3","T4"];
 		const topicRoles = ["RO","SRO","RO","SRO","RO","SRO","RO","SRO","RO","SRO","RO"];
-		// const bwrNumTopics = [20,7,6,3,26,5,11,3,6,7,6];
-
+	
 		// loop through the number of topics in each Tier group and construct arrays to track topic titles, topic types (kacats), and importances for selected items:
 	
-		// CODE UPDATE NOTE:  Add the logic to check for text that only includes BWR and matching X for design in K/A
-		// when the "(BWR " text occurs in the K/A and logic to check for matching "(Mark " and matching containment
-		// to the BWR random topic selector.
-
 		// Perform Tier 1 Group 1 Selections for RO:
 		for (let i = 0; i < bwrNumTopics[0]; i++) {  //  for Tier 1 RO topics
 			thisSystem = systemsT1G1[i];
 			thisKA = kaCatsTier1[i];
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(1,"RO",thisKA)};
+			
+			
 			if (thisKA === "G") {
 				// multi-unit flag exlcusions:
 
@@ -58904,6 +58954,7 @@ module.exports = {
 			kaCatsRO.push(thisKA);
 			topicSystemsRO.push(thisSystem);
 			selectedIds.push(topicData.Id);
+			selectedKACombos.push(topicData.thisSystem + thisKA);
 		};
 
 		// Perform Tier 1 Group 1 Selections for SRO:
@@ -58911,6 +58962,11 @@ module.exports = {
 		for (let i = bwrNumTopics[0]; i < bwrNumTopics[0]+bwrNumTopics[1]; i++) {  //  for Tier 1 Group 1 SRO topics
 			thisSystem = systemsT1G1[i];
 			thisKA = SROCatsTier1and2[i];
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(1,"SRO",thisKA)};
+
+
 			if (thisKA === "G") {
 				// multi-unit flag exlcusions:
 
@@ -58935,12 +58991,18 @@ module.exports = {
 			kaCatsSRO.push(thisKA);
 			topicSystemsSRO.push(thisSystem);
 			selectedIds.push(topicData.Id);
+			selectedKACombos.push(topicData.thisSystem + thisKA);
 		};
 
 		// Perform Tier 1 Group 2 selections for RO:
 		for (let i = 0; i < bwrNumTopics[2]; i++) {  //  for Tier 1 Group 2 RO topics
 			thisSystem = systemsT1G2[i];
 			thisKA = kaCatsTier1[i+bwrNumTopics[0]+bwrNumTopics[1]];  // keep going on the random ka loop.
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(1,"RO",thisKA)};
+
 			if (thisKA === "G") {
 				// multi-unit flag exlcusions:
 
@@ -58968,6 +59030,7 @@ module.exports = {
 			kaCatsRO.push(thisKA);
 			topicSystemsRO.push(thisSystem);
 			selectedIds.push(topicData.Id);
+			selectedKACombos.push(topicData.thisSystem + thisKA);
 
 		};
 
@@ -58975,6 +59038,11 @@ module.exports = {
 		for (let i = bwrNumTopics[2]; i < bwrNumTopics[2]+bwrNumTopics[3]; i++) {  //  for Tier 1 Group 2 SRO topics
 			thisSystem = systemsT1G2[i];
 			thisKA = SROCatsTier1and2[i];  // This starts over from the beginning, could start by the end.
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(1,"SRO",thisKA)};
+
 			if (thisKA === "G") {
 				// multi-unit flag exlcusions:
 
@@ -58999,16 +59067,19 @@ module.exports = {
 			kaCatsSRO.push(thisKA);
 			topicSystemsSRO.push(thisSystem);
 			selectedIds.push(topicData.Id);
+			selectedKACombos.push(topicData.thisSystem + thisKA);
 
 		};
-
-		// Perform Tier 2 Group 1 selections for RO:
-
 		
 		// Perform Tier 2 Group 1 Selections for RO:
 		for (let i = 0; i < bwrNumTopics[4]; i++) {  //  for Tier 2 Group 1 RO topics
 			thisSystem = systemsT2G1[i];
 			thisKA = kaCatsTier2[i];
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(2,"RO",thisKA)};
+
 			if (thisKA === "G") { // needs to switch from G to C and start on G:
 				if (tier2GCswitch === 'C') {
 					var topicData = randomTopicSelector(systemsComponents,tier2GCswitch,"RO",selectedIds,bwrDesignType,markType);
@@ -59047,12 +59118,18 @@ module.exports = {
 			
 			topicSystemsRO.push(thisSystem);
 			selectedIds.push(topicData.Id);
+			selectedKACombos.push(topicData.thisSystem + thisKA);
 		};
 
 		// Perform Tier 2 Group 1 selections for SRO:
 		for (let i = bwrNumTopics[4]; i < bwrNumTopics[4]+bwrNumTopics[5]; i++) {  //  for Tier 2 Group 1 SRO topics
 			thisSystem = systemsT2G1[i];
 			thisKA = SROCatsTier1and2[i];
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(2,"SRO",thisKA)};
+
 			if (thisKA === "G") { 
 				// multi-unit flag exlcusions:
 
@@ -59078,12 +59155,18 @@ module.exports = {
 			kaCatsSRO.push(thisKA);
 			topicSystemsSRO.push(thisSystem);
 			selectedIds.push(topicData.Id);
+			selectedKACombos.push(topicData.thisSystem + thisKA);
 		};
 
 		// Perform Tier 2 Group 2 Selections for RO:
 		for (let i = 0; i < bwrNumTopics[6]; i++) {  //  for Tier 2 Group 2 RO topics
 			thisSystem = systemsT2G2[i];
 			thisKA = kaCatsTier2[i+bwrNumTopics[4]+bwrNumTopics[5]];
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(2,"RO",thisKA)};
+
 			if (thisKA === "G") { // needs to switch from G to C and start on C:
 				if (tier2GCswitch === 'C') {
 					var topicData = randomTopicSelector(systemsComponents,tier2GCswitch,"RO",selectedIds,bwrDesignType,markType);
@@ -59142,6 +59225,7 @@ module.exports = {
 			topicImportanceRO.push(topicData.ROImp);
 			topicSystemsRO.push(thisSystem);
 			selectedIds.push(topicData.Id);
+			selectedKACombos.push(topicData.thisSystem + thisKA);
 		};
 
 		// Perform Tier 2 Group 2 selections for SRO:
@@ -59156,6 +59240,10 @@ module.exports = {
 			else {
 				thisKA = SROCatsTier1and2[i];
 			}
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(2,"SRO",thisKA)};
 			
 			
 			if (thisKA === "G") { 
@@ -59199,6 +59287,7 @@ module.exports = {
 			kaCatsSRO.push(thisKA);
 			topicSystemsSRO.push(thisSystem);
 			selectedIds.push(topicData.Id);
+			selectedKACombos.push(topicData.thisSystem + thisKA);
 		};
 
 		// On to Tier 3:
@@ -59234,6 +59323,7 @@ module.exports = {
 			kaCatsRO.push(thisKA);
 			topicSystemsRO.push(thisSystem);
 			selectedIds.push(topicData.Id);
+			selectedKACombos.push(topicData.thisSystem + thisKA);
 		};
 
 		// Select Tier 3 SRO topics:
@@ -59268,6 +59358,7 @@ module.exports = {
 			kaCatsSRO.push(thisKA);
 			topicSystemsSRO.push(thisSystem);
 			selectedIds.push(topicData.Id);
+			selectedKACombos.push(topicData.thisSystem + thisKA);
 		};
 
 		// On to Tier 4 (RO-only)
@@ -59291,6 +59382,7 @@ module.exports = {
 			kaCatsRO.push(thisKA);
 			topicSystemsRO.push(thisSystem);
 			selectedIds.push(topicData.Id);
+			selectedKACombos.push(topicData.thisSystem + thisKA);
 		};
 
 		// perform topic balancing:
