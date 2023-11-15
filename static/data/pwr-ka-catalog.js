@@ -75512,6 +75512,56 @@ module.exports = {
 		// set up repeater function:
 		const repeat = (arr, n) => [].concat(...Array(n).fill(arr));
 
+		// function to randomly return a different applicable KA category in a Tier, Group, Role within the same tier group system
+
+		function randomOtherCategory(tierNumber,roleROSRO,selectedKA) {
+
+			switch(tierNumber) { // switch statement on Tier
+				case 1:
+				  // code to return a different KA category than the one selected for Tier 1
+				  if (roleROSRO === "RO") {
+					var kaOptions = ["K1", "K2","K3","A1","A2","G"];
+					kaOptions = shuffleArray(kaOptions);
+			
+					shuffleIndex = 0;
+					var newKACat = kaOptions[shuffleIndex];
+					while(newKACat.includes(selectedKA)) {
+						shuffleIndex = shuffleIndex+1;
+						newKACat = kaOptions(shuffleIndex);
+					}
+					return newKACat;
+				  }
+				  else { // If it is SRO, return the opposite category.
+					if (selectedKA === 'G') {return 'A2'} else {return 'G'};
+
+				  }
+				  break;
+				case 2:
+				  // code to return a different KA category than the one selected for Tier 2
+				  if (roleROSRO === "RO") {
+					var kaOptions = ["K1","K2","K3","K4","K5","K6","A1","A2","A3","A4","G"];
+					kaOptions = shuffleArray(kaOptions);
+			
+					shuffleIndex = 0;
+					var newKACat = kaOptions[shuffleIndex];
+					while(newKACat.includes(selectedKA)) {
+						shuffleIndex = shuffleIndex+1;
+						newKACat = kaOptions(shuffleIndex);
+					}
+					return newKACat;
+				  }
+				  else { // If it is SRO, return the opposite category.
+					if (selectedKA === 'G') {return 'A2'} else {return 'G'};
+
+				  }
+				  break;
+				default:
+				  return selectedKA;
+			};
+			
+
+		};
+
 
 		// set up selector basiscs:
 		var kaCatsTier1 = ["K1", "K2","K3","A1","A2","G"];
@@ -75649,17 +75699,23 @@ module.exports = {
 		for (let i = 0; i < pwrNumTopics[0]; i++) {  //  for Tier 1 RO topics
 			thisSystem = systemsT1G1[i];
 			thisKA = kaCatsTier1[i];
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(1,"RO",thisKA)};
+
+		
 			if (thisKA === "G") {
 				// single-unit exlcusions:
 
 				if (multiFlag===0)  {  // If it is a single unit site, ensure kaTitle doesn't contain the substring "MULTI-UNIT"
 					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 					var testText = topicData.kaTitle;
-					testText = testText.upper();
+					testText = testText.toUpperCase();
 					while (!testText.includes(singleUnitExclusionText)) {
 						topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 						testText = topicData.kaTitle;
-						testText = testText.upper();
+						testText = testText.toUpperCase();
 					}
 
 				}
@@ -75686,17 +75742,22 @@ module.exports = {
 		for (let i = pwrNumTopics[0]; i < pwrNumTopics[0]+pwrNumTopics[1]; i++) {  //  for Tier 1 Group 1 SRO topics
 			thisSystem = systemsT1G1[i];
 			thisKA = SROCatsTier1and2[i];
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(1,"SRO",thisKA)};
+
 			if (thisKA === "G") {
 				// single-unit exlcusions:
 
 				if (multiFlag===0)  {  // If it is a single unit site, ensure kaTitle doesn't contain the substring "MULTI-UNIT"
 					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 					var testText = topicData.kaTitle;
-					testText = testText.upper();
+					testText = testText.toUpperCase();
 					while (!testText.includes(singleUnitExclusionText)) {
 						topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 						testText = topicData.kaTitle;
-						testText = testText.upper();
+						testText = testText.toUpperCase();
 					}
 
 				}
@@ -75723,17 +75784,23 @@ module.exports = {
 		for (let i = 0; i < pwrNumTopics[2]; i++) {  //  for Tier 1 Group 2 RO topics
 			thisSystem = systemsT1G2[i];
 			thisKA = kaCatsTier1[i+pwrNumTopics[0]+pwrNumTopics[1]];  // keep going on the random ka loop.
+
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(1,"RO",thisKA)};
+
 			if (thisKA === "G") {
 				// single-unit  exlcusions:
 
 				if (multiFlag===0)  {  // If it is a single unit site, ensure kaTitle doesn't contain the substring "MULTI-UNIT"
 					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 					var testText = topicData.kaTitle;
-					testText = testText.upper();
+					testText = testText.toUpperCase();
 					while (!testText.includes(singleUnitExclusionText)) {
 						topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 						testText = topicData.kaTitle;
-						testText = testText.upper();
+						testText = testText.toUpperCase();
 					}
 
 				}
@@ -75763,17 +75830,23 @@ module.exports = {
 		for (let i = pwrNumTopics[2]; i < pwrNumTopics[2]+pwrNumTopics[3]; i++) {  //  for Tier 1 Group 2 SRO topics
 			thisSystem = systemsT1G2[i];
 			thisKA = SROCatsTier1and2[i];  // This starts over from the beginning, could start by the end.
+
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(1,"SRO",thisKA)};
+
 			if (thisKA === "G") {
 				// single-unit  exlcusions:
 
 				if (multiFlag===0)  {  // If it is a single unit site, ensure kaTitle doesn't contain the substring "MULTI-UNIT"
 					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 					var testText = topicData.kaTitle;
-					testText = testText.upper();
+					testText = testText.toUpperCase();
 					while (!testText.includes(singleUnitExclusionText)) {
 						topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 						testText = topicData.kaTitle;
-						testText = testText.upper();
+						testText = testText.toUpperCase();
 					}
 
 				}
@@ -75803,6 +75876,13 @@ module.exports = {
 		for (let i = 0; i < pwrNumTopics[4]; i++) {  //  for Tier 2 Group 1 RO topics
 			thisSystem = systemsT2G1[i];
 			thisKA = kaCatsTier2[i];
+
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(2,"RO",thisKA)};
+
+
 			if (thisKA === "G") { // needs to switch from G to C and start on C:
 				if (tier2GCswitch === 'C') {
 					var topicData = randomTopicSelector(systemsComponents,tier2GCswitch,"RO",selectedIds,pwrDesignType);
@@ -75816,11 +75896,11 @@ module.exports = {
 					if (multiFlag===0)  {  // If it is a single unit site, ensure kaTitle doesn't contain the substring "MULTI-UNIT"
 						var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 						var testText = topicData.kaTitle;
-						testText = testText.upper();
+						testText = testText.toUpperCase();
 						while (!testText.includes(singleUnitExclusionText)) {
 							topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 							testText = topicData.kaTitle;
-							testText = testText.upper();
+							testText = testText.toUpperCase();
 						}
 	
 					}
@@ -75853,17 +75933,24 @@ module.exports = {
 		for (let i = pwrNumTopics[4]; i < pwrNumTopics[4]+pwrNumTopics[5]; i++) {  //  for Tier 2 Group 1 SRO topics
 			thisSystem = systemsT2G1[i];
 			thisKA = SROCatsTier1and2[i];
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(1,"SRO",thisKA)};
+
+
+
 			if (thisKA === "G") { 
 				// single-unit exlcusions:
 
 				if (multiFlag===0)  {  // If it is a single unit site, ensure kaTitle doesn't contain the substring "MULTI-UNIT"
 					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 					var testText = topicData.kaTitle;
-					testText = testText.upper();
+					testText = testText.toUpperCase();
 					while (!testText.includes(singleUnitExclusionText)) {
 						topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 						testText = topicData.kaTitle;
-						testText = testText.upper();
+						testText = testText.toUpperCase();
 					}
 
 				}
@@ -75891,6 +75978,13 @@ module.exports = {
 		for (let i = 0; i < pwrNumTopics[6]; i++) {  //  for Tier 2 Group 2 RO topics
 			thisSystem = systemsT2G2[i];
 			thisKA = kaCatsTier2[i+pwrNumTopics[4]+pwrNumTopics[5]];
+
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(2,"RO",thisKA)};
+
+
+
 			if (thisKA === "G") { // needs to switch from G to C and start on C:
 				if (tier2GCswitch === 'C') {
 					var topicData = randomTopicSelector(systemsComponents,tier2GCswitch,"RO",selectedIds,pwrDesignType);
@@ -75906,11 +76000,11 @@ module.exports = {
 					if (multiFlag===0)  {  // If it is a single unit site, ensure kaTitle doesn't contain the substring "MULTI-UNIT"
 						var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 						var testText = topicData.kaTitle;
-						testText = testText.upper();
+						testText = testText.toUpperCase();
 						while (!testText.includes(singleUnitExclusionText)) {
 							topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 							testText = topicData.kaTitle;
-							testText = testText.upper();
+							testText = testText.toUpperCase();
 						}
 	
 					}
@@ -75931,11 +76025,11 @@ module.exports = {
 				if (multiFlag===0)  {  // If it is a single unit site, ensure kaTitle doesn't contain the substring "MULTI-UNIT"
 					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 					var testText = topicData.kaTitle;
-					testText = testText.upper();
+					testText = testText.toUpperCase();
 					while (!testText.includes(singleUnitExclusionText)) {
 						topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 						testText = topicData.kaTitle;
-						testText = testText.upper();
+						testText = testText.toUpperCase();
 					}
 					var titleToAdd = topicData.kaTitle;
 
@@ -75970,6 +76064,10 @@ module.exports = {
 				thisKA = SROCatsTier1and2[i];
 			}
 
+			// If the current system and KA category combination matches a previously selected system and category, switch KA category to another one
+			var sysKAtest = thisSystem + thisKA;
+			if (selectedKACombos.includes(sysKAtest)) {thisKA = randomOtherCategory(2,"SRO",thisKA)};
+
 
 			if (thisKA === "G") { 
 				// multi-unit flag exlcusions:
@@ -75977,11 +76075,11 @@ module.exports = {
 				if (multiFlag===0)  {  // If it is a single unit site, ensure kaTitle doesn't contain the substring "MULTI-UNIT"
 					var topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 					var testText = topicData.kaTitle;
-					testText = testText.upper();
+					testText = testText.toUpperCase();
 					while (!testText.includes(singleUnitExclusionText)) {
 						topicData = randomTopicSelector("G2.",thisKA,"RO",selectedIds,pwrDesignType);
 						testText = topicData.kaTitle;
-						testText = testText.upper();
+						testText = testText.toUpperCase();
 					}
 
 				}

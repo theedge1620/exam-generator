@@ -58714,14 +58714,18 @@ module.exports = {
 					return randomEntry;					
 				}
 			}
-			else if (kaTitleString.includes('(Mark ')) {
-				let index = kaTitleString.indexOf('(Mark ');
+			else if (kaTitleString.toUpperCase().includes('(MARK ')) {
+				let index = kaTitleString.toUpperCase().indexOf('(MARK ');
 				let testString = kaTitleString.substring(index,kaTitleString.length);
 				let index2 = testString.indexOf(')');
 				testString = testString.substring(0,index2);
 				console.log(testString);
 
-				if(testString.includes(contType)) {
+				contString1 = ' ' + contType + ')';
+				contString2 = ' ' + contType + ' ';
+				contString3 = ' ' + contType + ',';
+
+				if(testString.includes(contString1) || testString.includes(contString2) || testString.includes(contString3)) {
 					return randomEntry;
 				}
 				else { // Pick another random entry
