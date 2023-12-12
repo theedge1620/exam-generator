@@ -1,8 +1,6 @@
 const button = document.querySelector("button");
 
 
-
-
 var siteHost = 'http://localhost:3001/sites/';  
 var examHostpwr = 'http://localhost:3001/pwr/';
 var examHostbwr = 'http://localhost:3001/bwr/';  
